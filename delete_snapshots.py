@@ -25,9 +25,8 @@ def main(args):
     delete_count = 0
     for snapshot in snapshots["Snapshots"]:
         start_time = snapshot['StartTime']
-        if(start_time < delete_time):
+        if start_time < delete_time:
             if filter(args,snapshot):
-                # print(snapshot)
                 size_counter = size_counter + snapshot['VolumeSize']
                 delete_count = delete_count + 1
                 tag_name_str = ''
@@ -37,10 +36,10 @@ def main(args):
                     if tag_name:
                         tag_name_str = f"Tag:Name : {tag_name[0]['Value']}"
                 if args.delete is True:
-                    print(f"Deleting Snapshot {snapshot['SnapshotId']} {tag_name_str} Description: {snapshot['Description']}" * args.verbose)
+                    print(f"Deleting Snapshot {snapshot['SnapshotId']} {tag_name_str} StartTime: {snapshot['StartTime']} Description: {snapshot['Description']}" * args.verbose)
                     ec2.delete_snapshot(SnapshotId=snapshot['SnapshotId'],DryRun=False)
                 else:
-                    print(f"Warning: Snapshot {snapshot['SnapshotId']} {tag_name_str} not deleted! (add -d or --delete option) Description: {snapshot['Description']}" * args.verbose)
+                    print(f"Warning: Snapshot {snapshot['SnapshotId']} {tag_name_str} not deleted! (add -d or --delete option) StartTime: {snapshot['StartTime']} Description: {snapshot['Description']}" * args.verbose)
     print(f"Deleted {delete_count} snapshots totalling {size_counter}GB")
 
 def filter(args,snapshot):
